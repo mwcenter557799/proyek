@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendaftaran Tahfidz Online</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f0f4f8; padding: 20px; margin: 0; }
+        .container { max-width: 550px; margin: auto; background: #ffffff; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #1b4332; margin-top: 0; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; color: #2d6a4f; }
+        input, select, button { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
+        .info-box { background-color: #e8f5e9; border-left: 5px solid #2d6a4f; padding: 12px; margin: 15px 0; border-radius: 4px; }
+        .payment-info { background: #f8f9fa; border: 1px dashed #2d6a4f; padding: 12px; border-radius: 6px; display: none; margin-top: 10px; }
+        button { background-color: #25D366; color: white; font-weight: bold; border: none; cursor: pointer; font-size: 16px; margin-top: 10px; transition: background 0.3s; }
+        button:hover { background-color: #1eb854; }
+        .file-info { font-size: 12px; color: #666; margin-top: 4px; }
+        .preview-container { margin-top: 10px; display: none; text-align: center; }
+        .preview-container img { max-width: 100%; max-height: 200px; border-radius: 6px; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Form Pendaftaran Tahfidz Online</h2>
+    
+    <form id="formTahfidz">
+        <!-- 1. Data Peserta -->
+        <div class="form-group">
+            <label for="nama">Nama Lengkap Santri:</label>
+            <input type="text" id="nama" placeholder="Masukkan nama lengkap" required>
+        </div>
+
+        <div class="form-group">
+            <label for="whatsapp">Nomor WhatsApp Peserta:</label>
+            <input type="tel" id="whatsapp" placeholder="Contoh: 081234567890" required>
+        </div>
+
+        <!-- 2. Pilihan Paket -->
+        <div class="form-group">
+            <label for="paket">Pilih Paket Program Online:</label>
+            <select id="paket" required onchange="hitungBiaya()">
+                <option value="">-- Pilih Paket --</option>
+                <option value="150000" data-nama="Kelas Kelompok (Rp 150.000 / bln)">Kelas Kelompok (Rp 150.000 / bln)</option>
+                <option value="300000" data-nama="Kelas Privat 1-on-1 (Rp 300.000 / bln)">Kelas Privat 1-on-1 (Rp 300.000 / bln)</option>
+            </select>
+        </div>
+
+        <!-- 3. Rincian Biaya -->
+        <div class="info-box">
+            Total Pembayaran: <strong id="totalText" style="color: #1b4332;">Rp 0</strong>
+        </div>
+
+        <!-- 4. Metode Pembayaran -->
+        <div class="form-group">
+            <label for="metode">Metode Pembayaran:</label>
+            <select id="metode" required onchange="tampilkanDetail()">
+                <option value="">-- Pilih Pembayaran --</option>
+                <optgroup label="Bank Transfer">
+                    <option value="bsi">Bank BSI Syariah</option>
+                    <option value="bca">Bank BCA</option>
+                </optgroup>
+                <optgroup label="E-Wallet">
+                    <option value="gopay">GoPay</option>
+                    <option value="dana">DANA</option>
+                    <option value="ovo">OVO</option>
+                    <option value="shopeepay">ShopeePay</option>
+                </optgroup>
+            </select>
+        </div>
+
+        <div id="paymentDetails" class="payment-info">
+            <span id="detailRekening"></span>
+        </div>
+
+        <!-- 5. Upload Bukti Pembayaran -->
+        <div class="form-group" style="margin-top: 15px;">
+            <label for="bukti">Upload Bukti Transfer / Pembayaran:</label>
+            <input type="file" id="bukti" accept="image/*" required onchange="previewBukti(event)">
+            <div class="file-info">* Format: Gambar/Screenshot Transfer (JPG, PNG)</div>
+            <div id="previewContainer" class="preview-container">
+                <img id="imagePreview" src="" alt="Preview Bukti Pembayaran">
+            </div>
+        </div>
+
+        <button type="submit"> Daftar & Kirim Bukti via WhatsApp</button>
+    </form>
+</div>
+
+<script>
+    // Nomor HP Admin
+    const NO_ADMIN = "6287815575903"; 
+
+    function hitungBiaya() {
+        const biaya = parseInt(document.getElementById('paket').value) || 0;
+        document.getElementById('totalText').innerText = 'Rp ' + biaya.toLocaleString('id-ID');
+    }
+
+    function tampilkanDetail() {
+        const metode = document.getElementById('metode').value;
+        const details = document.getElementById('paymentDetails');
+        const text = document.getElementById('detailRekening');
+
+        const bankData = {
+            'bsi': '<strong>Bank BSI</strong><br>No. Rekening: 711-223-3445<br>a.n. Tahfidz Online',
+            'bca': '<strong>Bank BCA</strong><br>No. Rekening: 123-456-7890<br>a.n. Tahfidz Online',
+            'gopay': '<strong>GoPay</strong><br>No. HP: 0878-1557-5903<br>a.n. Tahfidz Online',
+            'dana': '<strong>DANA</strong><br>No. HP: 0878-1557-5903<br>a.n. Tahfidz Online',
+            'ovo': '<strong>OVO</strong><br>No. HP: 0878-1557-5903<br>a.n. Tahfidz Online',
+            'shopeepay': '<strong>ShopeePay</strong><br>No. HP: 0878-1557-5903<br>a.n. Tahfidz Online'
+        };
+
+        if (metode && bankData[metode]) {
+            text.innerHTML = bankData[metode] + '<br><small>*Silakan transfer sesuai dengan total nominal di atas.</small>';
+            details.style.display = 'block';
+        } else {
+            details.style.display = 'none';
+        }
+    }
+
+    function previewBukti(event) {
+        const reader = new FileReader();
+        reader.onload = function() {
+            const output = document.getElementById('imagePreview');
+            output.src = reader.result;
+            document.getElementById('previewContainer').style.display = 'block';
+        };
+        if (event.target.files[0]) {
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    }
+
+    document.getElementById('formTahfidz').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Ambil Nilai Input
+        const nama = document.getElementById('nama').value;
+        const whatsapp = document.getElementById('whatsapp').value;
+        
+        const selectPaket = document.getElementById('paket');
+        const paketNama = selectPaket.options[selectPaket.selectedIndex].getAttribute('data-nama');
+        const biaya = parseInt(selectPaket.value) || 0;
+
+        const selectMetode = document.getElementById('metode');
+        const metodeNama = selectMetode.options[selectMetode.selectedIndex].text;
+
+        const fileInput = document.getElementById('bukti');
+        const fileName = fileInput.files[0] ? fileInput.files[0].name : 'File terlampir';
+
+        // Format Pesan WhatsApp
+        const pesanWA = `*FORM PENDAFTARAN TAHFIDZ ONLINE*%0A%0A` +
+                        `*Nama Santri:* ${encodeURIComponent(nama)}%0A` +
+                        `*No. WA Santri:* ${encodeURIComponent(whatsapp)}%0A` +
+                        `*Paket Dituju:* ${encodeURIComponent(paketNama)}%0A` +
+                        `*Total Biaya:* Rp ${biaya.toLocaleString('id-ID')}%0A` +
+                        `*Metode Bayar:* ${encodeURIComponent(metodeNama)}%0A` +
+                        `*Nama File Bukti:* ${encodeURIComponent(fileName)}%0A%0A` +
+                        `----------------------------------------%0A` +
+                        `_Saya sudah melampirkan foto bukti transfer di obrolan ini. Mohon diproses, terima kasih._`;
+
+        // Redirect ke WhatsApp Admin
+        const urlWA = `https://wa.me/${NO_ADMIN}?text=${pesanWA}`;
+        window.open(urlWA, '_blank');
+    });
+</script>
+
+</body>
+</html>
