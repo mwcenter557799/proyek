@@ -44,7 +44,8 @@
             <select id="paket" required onchange="hitungBiaya()">
                 <option value="">-- Pilih Paket --</option>
                 <option value="150000" data-nama="Kelas Kelompok (Rp 150.000 / bln)">program reguler (Rp 77.000 / bln)</option>
-                <option value="300000" data-nama="Kelas Privat 1-on-1 (Rp 300.000 / bln)">Kelas Privat 1-on-1 (Rp 300.000 / bln)</option>
+                <option value="150000" data-nama="Kelas Kelompok (Rp 150.000 / bln)">program intensif (Rp 99.000 / bln)</option>
+                <option value="300000" data-nama="Kelas Privat 1-on-1 (Rp 300.000 / bln)">program Privat 1-on-1 (Rp 125.000 / bln)</option>
             </select>
         </div>
 
@@ -60,12 +61,9 @@
                 <option value="">-- Pilih Pembayaran --</option>
                 <optgroup label="Bank Transfer">
                     <option value="bsi">Bank BSI Syariah</option>
-                    <option value="bca">Bank BCA</option>
                 </optgroup>
                 <optgroup label="E-Wallet">
                     <option value="gopay">GoPay</option>
-                    <option value="dana">DANA</option>
-                    <option value="ovo">OVO</option>
                     <option value="shopeepay">ShopeePay</option>
                 </optgroup>
             </select>
@@ -104,12 +102,9 @@
         const text = document.getElementById('detailRekening');
 
         const bankData = {
-            'bsi': '<strong>Bank BSI</strong><br>No. Rekening: 711-223-3445<br>a.n. Tahfidz Online',
-            'bca': '<strong>Bank BCA</strong><br>No. Rekening: 123-456-7890<br>a.n. Tahfidz Online',
-            'gopay': '<strong>GoPay</strong><br>No. HP: 0878-1557-5903<br>a.n. Tahfidz Online',
-            'dana': '<strong>DANA</strong><br>No. HP: 0878-1557-5903<br>a.n. Tahfidz Online',
-            'ovo': '<strong>OVO</strong><br>No. HP: 0878-1557-5903<br>a.n. Tahfidz Online',
-            'shopeepay': '<strong>ShopeePay</strong><br>No. HP: 0878-1557-5903<br>a.n. Tahfidz Online'
+            'bsi': '<strong>Bank BSI</strong><br>No. Rekening: 840-776-4850<br>maulidin',
+            'gopay': '<strong>GoPay</strong><br>No. HP: 0878-1557-5903<br>',
+            'shopeepay': '<strong>ShopeePay</strong><br>No. HP: 0878-1557-5903<br>'
         };
 
         if (metode && bankData[metode]) {
